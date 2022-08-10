@@ -4,22 +4,23 @@
     {
         public class Stopwatch
         {
-            private readonly DateTime StartTime;
+            private DateTime StartTime { get; set; }
             private DateTime EndTime { get; set; }
             public TimeSpan Duration { get; set; }
             private bool IsRunning = false;
 
-            public Stopwatch(DateTime startTime)
-            {
-                this.StartTime = startTime;
-            }
-
             public void Start()
             {
-                if(IsRunning == false)
+                if(IsRunning == false && Duration.TotalMilliseconds == 0)
                 {
                     IsRunning = true;
                     Console.WriteLine("Stopwatch started");
+                    StartTime = DateTime.UtcNow;
+                }
+                else if (IsRunning == false && Duration.TotalMilliseconds > 0)
+                {
+                    Console.WriteLine("Stopwatch resumed");
+                    IsRunning = true;
                 }
                 else
                 {
@@ -47,7 +48,7 @@
         }
         static void Main(string[] args)
         {
-            Stopwatch watch = new Stopwatch(DateTime.UtcNow);
+            Stopwatch watch = new Stopwatch();
 
             //1st iteration to make sure subtraction is working correctly
             try
@@ -76,15 +77,15 @@
             }
 
             //This should fail as stopwatch is already running
-            //try
-            //{
-            //    watch.Start();
-            //    watch.Start();
-            //}
-            //catch (InvalidOperationException e)
-            //{
-            //    Console.WriteLine($"{e.Message}");
-            //}
+            try
+            {
+                watch.Start();
+                watch.Start();
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"{e.Message}");
+            }
 
             //This should also fail as stopwatch is not running
             //try
