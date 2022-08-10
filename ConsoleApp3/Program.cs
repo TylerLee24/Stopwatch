@@ -6,8 +6,8 @@
         {
             private readonly DateTime StartTime;
             private DateTime EndTime { get; set; }
-            private bool IsRunning = false;
             public TimeSpan Duration { get; set; }
+            private bool IsRunning = false;
 
             public Stopwatch(DateTime startTime)
             {
@@ -49,6 +49,7 @@
         {
             Stopwatch watch = new Stopwatch(DateTime.UtcNow);
 
+            //1st iteration to make sure subtraction is working correctly
             try
             {
                 watch.Start();
@@ -56,11 +57,12 @@
                 watch.Stop();
                 Console.WriteLine($"Stopwatch was running for total duration of {watch.Duration}");
             }
-            catch (InvalidOperationException)
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine($"{e.Message}");
             }
 
+            //2nd iteration to make sure readonly field is retaining the value set in the constructor and StartTime is not overwritten
             try
             {
                 watch.Start();
@@ -68,20 +70,31 @@
                 watch.Stop();
                 Console.WriteLine($"Stopwatch was running for total duration of {watch.Duration}");
             }
-            catch (InvalidOperationException)
+            catch (Exception e)
             {
-                throw;
+                Console.WriteLine($"{e.Message}");
             }
 
-            try
-            {
-                watch.Start();
-                watch.Start();
-            }
-            catch (InvalidOperationException)
-            {
-                throw;
-            }
+            //This should fail as stopwatch is already running
+            //try
+            //{
+            //    watch.Start();
+            //    watch.Start();
+            //}
+            //catch (InvalidOperationException e)
+            //{
+            //    Console.WriteLine($"{e.Message}");
+            //}
+
+            //This should also fail as stopwatch is not running
+            //try
+            //{
+            //    watch.Stop();
+            //}
+            //catch (InvalidOperationException e)
+            //{
+            //    Console.WriteLine($"{e.Message}");
+            //}
         }
     }
 }
