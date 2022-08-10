@@ -45,7 +45,14 @@
                     IsRunning = false;
                 }
             }
+
+            public void Reset()
+            {
+                Duration = TimeSpan.Zero;
+                IsRunning = false;
+            }
         }
+
         static void Main(string[] args)
         {
             Stopwatch watch = new Stopwatch();
@@ -77,15 +84,15 @@
             }
 
             //This should fail as stopwatch is already running
-            try
-            {
-                watch.Start();
-                watch.Start();
-            }
-            catch (InvalidOperationException e)
-            {
-                Console.WriteLine($"{e.Message}");
-            }
+            //try
+            //{
+            //    watch.Start();
+            //    watch.Start();
+            //}
+            //catch (InvalidOperationException e)
+            //{
+            //    Console.WriteLine($"{e.Message}");
+            //}
 
             //This should also fail as stopwatch is not running
             //try
@@ -96,6 +103,31 @@
             //{
             //    Console.WriteLine($"{e.Message}");
             //}
+
+            //reset method call to reset the stopwatch
+            try
+            {
+                watch.Reset();
+                Console.WriteLine("Stopwatch reset");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            //Test to see if reset worked and duration is correctly calculated
+            try
+            {
+                watch.Start();
+                Thread.Sleep(5000);
+                watch.Stop();
+                Console.WriteLine($"Stopwatch was running for total duration of {watch.Duration}");
+            }
+            catch (InvalidOperationException e)
+            {
+
+                throw;
+            }
         }
     }
 }
